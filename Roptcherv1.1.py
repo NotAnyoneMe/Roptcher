@@ -70,7 +70,7 @@ class SimpleBruteForcer:
         except Exception as e:
             print(Fore.GREEN + f"[Log Error] Failed to write hit: {e}")
 
-    def attempt_login(self, session, password):
+def attempt_login(self, session, password):
     try:
         print(Fore.CYAN + f"[🧠] Starting login attempt for {self.username}...")
 
@@ -120,8 +120,7 @@ class SimpleBruteForcer:
 
     except Exception as e:
         print(Fore.RED + f"[Error] Login exception: {e}")
-        return False
-        
+        return False   
         
     def worker(self):
         while not self.passwords.empty() and not self.success_flag.is_set() and not self.stop_flag.is_set():
